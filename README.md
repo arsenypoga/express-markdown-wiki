@@ -1,29 +1,44 @@
-# markdown-wiki
+# Express Markdown Wiki
 
-## Project setup
-```
+Express Markdown wiki, is an express server that serves JSON routes and markdown files for one of my projects
+
+## Getting Started
+
+To install, simply git clone it, then install the dependencies using your favorite package manager
+
+```bash
 yarn install
+npm install
+pnpm install
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
+### Usage
+
+For now, I have only implemented dev server via nodemon.
+
+to run it:
+
+```bash
+yarn run dev
+node run dev
+pnpm run dev
 ```
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+### Running the tests
 
-### Run your tests
-```
-yarn run test
-```
+Wot tests mate ?!
+Seriously, though I might add e2e tests later.
 
-### Lints and fixes files
-```
-yarn run lint
-```
+### Deployment
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+I haven't implemented it yet, but I will probably be using [PM2](http://pm2.keymetrics.io/) to run it
+
+## Built With
+
+* [Express](https://expressjs.com/) - Web framework
+* [Winston](https://github.com/winstonjs/winston) - Logger
+* [Nodemon](https://github.com/remy/nodemon) - Development tool
+
+## License ~~(Oi mate where's your loicense?!)~~
+
+[MIT](LICENSE)

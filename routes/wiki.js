@@ -1,34 +1,36 @@
 const path = require('path')
-const fs = require('fs')
+const chokidar = require('chokidar')
+const logger = require('../logger')
+
+const directoryTree = require('directory-tree')
 
 module.exports = express => {
   const router = express.Router()
+  const location = path.join('wiki')
+  let tree = directoryTree(location, {
+    normalizePath: true
+  })
+  logger.debug(tree)
 
-  const walkDir = dir => {
-    const files = fs.readdirSync(dir)
-    logger.debug(files)
-  }
-
-  const walkDir = dir => {
-    const files = []
-    const directories = []
-    fs.readdir(dir, (err, files) => {
-      files.forEach((file) => {
-        if (fs.stat(path.join(dir, file), (err, stat) => {
-          
-        }))
-      })
+  chokidar.watch(location).on('all', (event, path) => {
+    tree = directoryTree(location, {
+      normalizePath: true
     })
-  }
-
-  walkDir('./wiki')
+  })
 
   router.get('/', (req, res) => {
+//    res.append('Access-Control-Allow-Origin', '*')
     return res.sendFile(path.join(__dirname, '..', 'README.md'))
   })
 
   router.get('/routes', (req, res) => {
-    return res
+  //  res.append('Access-Control-Allow-Origin', '*')
+    return res.json(tree)
+  })
+
+  router.get('/reload', (req, res) => {
+//    res.append('Access-Control-Allow-Origin', '*')
+    return res.json(tree)
   })
 
   return router

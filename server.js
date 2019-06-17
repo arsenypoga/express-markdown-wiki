@@ -3,17 +3,12 @@
  */
 const express = require('express')
 const morgan = require('morgan')
-const winston = require('winston')
-/**
- * Standard lib imports
- */
-const path = require('path')
-const fs = require('fs')
 
 /**
  * File imports
  */
 const manifest = require('./package.json')
+const logger = require('./logger')
 const wiki = require('./routes').wiki(express)
 
 const app = express()
@@ -24,35 +19,23 @@ const app = express()
 const PORT = process.env.PORT || 3000
 app.set('port', PORT)
 
-/**
- * Set logger
- */
-const logger = winston.createLogger({
-  level: 'silly',
-  format: winston.format.json()
+app.use(morgan('common', {
+  stream: logger.stream
+}))
+
+app.use('/wiki', express.static('wiki'))
+
+app.use('*', (req, res, next) => {
+  logger.info('Using CORS Handling')
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
 })
-
-logger.stream = {
-  write: (message, encoding) => logger.info(message)
-}
-
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({ format: winston.format.simple() })
-  )
-}
-
-app.use(morgan('common', { stream: logger.stream }))
 
 /**
  * Routes
  */
-app.use('/wiki', wiki)
-
-app.use('*', (req, res, next) => {
-  res.append('Access-Control-Allow-Origin', '*')
-  next()
-})
+app.use('/api/wiki', wiki)
 
 app.listen(PORT, () => {
   logger.info(`Server ${manifest.name} listening on : ${PORT}`)

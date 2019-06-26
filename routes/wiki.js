@@ -1,36 +1,37 @@
 const path = require('path')
-const chokidar = require('chokidar')
 const logger = require('../logger')
 
 const directoryTree = require('directory-tree')
 
 module.exports = express => {
   const router = express.Router()
-  const location = path.join('wiki')
-  let tree = directoryTree(location, {
-    normalizePath: true
-  })
-  logger.debug(tree)
+  const rootLocation = path.join('wiki')
 
-  chokidar.watch(location).on('all', (event, path) => {
-    tree = directoryTree(location, {
-      normalizePath: true
+  /**
+   * Generates JSON directory tree
+   *
+   * @param {string} location - directory location
+   * @return {Object} directory tree JSON Object
+   */
+  const getTree = location => {
+    logger.debug(`Generating File Tree for location: ${location}`)
+
+    return directoryTree(location, {
+      normalizePath: true,
+      extensions: /\.(md)$/,
+      exclude: /notes\/cheatsheets\/_*/
     })
-  })
-
-  router.get('/', (req, res) => {
-//    res.append('Access-Control-Allow-Origin', '*')
-    return res.sendFile(path.join(__dirname, '..', 'README.md'))
-  })
+  }
 
   router.get('/routes', (req, res) => {
-  //  res.append('Access-Control-Allow-Origin', '*')
+    let tree = getTree(rootLocation)
     return res.json(tree)
   })
 
-  router.get('/reload', (req, res) => {
-//    res.append('Access-Control-Allow-Origin', '*')
-    return res.json(tree)
+  router.get('/routes/*', (req, res) => {
+    return res.json({
+      msg: getTree(path.join(rootLocation, req.path.split('routes')[1]))
+    })
   })
 
   return router

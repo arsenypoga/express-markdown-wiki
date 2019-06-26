@@ -3,6 +3,7 @@
  */
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 
 /**
  * File imports
@@ -19,23 +20,24 @@ const app = express()
 const PORT = process.env.PORT || 3000
 app.set('port', PORT)
 
-app.use(morgan('common', {
-  stream: logger.stream
-}))
+app.use(cors())
+app.use(
+  morgan('short', {
+    stream: logger.stream
+  })
+)
 
 app.use('/wiki', express.static('wiki'))
-
-app.use('*', (req, res, next) => {
-  logger.info('Using CORS Handling')
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-  next()
-})
 
 /**
  * Routes
  */
+
 app.use('/api/wiki', wiki)
+
+app.get('/', (req, res) => {
+  return res.json({ message: 'success' })
+})
 
 app.listen(PORT, () => {
   logger.info(`Server ${manifest.name} listening on : ${PORT}`)

@@ -24,7 +24,7 @@
     "prettier": "^1.18.2",
     "superagent": "^5.1.0",
     "supertest": "^4.0.2",
-    "yarn": "^1.16.0"
+    "yarn": "^1.22.0"
   },
   "scripts": {
     "dev": "npx nodemon ./server.js"

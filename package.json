@@ -4,7 +4,7 @@
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "directory-tree": "^2.2.3",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "morgan": "^1.9.1",
     "winston": "^3.2.1"
   },
